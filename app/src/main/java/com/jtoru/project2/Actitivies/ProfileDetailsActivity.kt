@@ -4,12 +4,10 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.jtoru.project2.R
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile)
-        supportActionBar?.title = "Profile"
-
+        setContentView(R.layout.activity_profile_details)
     }
 }
