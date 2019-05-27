@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.*
 import com.jtoru.project2.Actitivies.MainActivity
 import android.content.Intent
 import android.widget.LinearLayout
+import com.jtoru.project2.Actitivies.FriendsActivity
 import com.jtoru.project2.Actitivies.ProfileActivity
 import com.jtoru.project2.Utils.MyDialogFragment
 
@@ -38,6 +39,11 @@ class FragmentProfile : Fragment() {
 
         goToProfile.setOnClickListener {
             val i = Intent(activity, ProfileActivity::class.java)
+            startActivity(i)
+        }
+
+        goToFriends.setOnClickListener {
+            val i = Intent(activity, FriendsActivity::class.java)
             startActivity(i)
         }
 

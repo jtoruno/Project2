@@ -9,6 +9,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".Fragments.FragmentMutualFriends">
+        </activity>
+        <activity android:name=".Fragments.FragmentAllFriends">
+        </activity>
+        <activity android:name=".Actitivies.FriendsActivity">
+        </activity>
         <activity android:name=".Actitivies.ProfileDetailsActivity">
         </activity>
         <activity android:name=".Actitivies.ProfileActivity">
