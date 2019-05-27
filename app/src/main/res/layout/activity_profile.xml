@@ -100,7 +100,7 @@
                 app:srcCompat="@drawable/ic_person_add_black_24dp"
                 android:id="@+id/btn_addFriendProfile" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="36dp" android:layout_marginTop="32dp"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" android:visibility="invisible"/>
         <TextView
                 android:text="Post"
                 android:layout_width="wrap_content"
