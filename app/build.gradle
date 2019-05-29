@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'com.google.gms.google-services'
+
 
 android {
     compileSdkVersion 28
@@ -38,4 +38,9 @@ dependencies {
 
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
 }
+apply plugin: 'com.google.gms.google-services'

@@ -12,7 +12,7 @@ class User(
     var pictures:List<String>,
     var education:List<String>,
     var city:String,
-    var birth: Date,
+    var birth: String,
     var cellphone:String,
     var email:String,
     var gender:Boolean

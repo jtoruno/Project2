@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "123228030269-csij0s790imu5sqpjrbp7odeadnk3k93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jtoru.project2",
+            "certificate_hash": "7583454d43a5ef344ac77d23b77c62c04ed678a7"
+          }
+        },
+        {
           "client_id": "123228030269-pj3f2irq2mqv0el1ppo6o8o802387cq9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
