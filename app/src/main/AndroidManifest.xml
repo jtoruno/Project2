@@ -18,10 +18,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Fragments.FragmentMutualFriends">
-        </activity>
-        <activity android:name=".Fragments.FragmentAllFriends">
-        </activity>
         <activity android:name=".Actitivies.FriendsActivity">
         </activity>
         <activity android:name=".Actitivies.ProfileDetailsActivity">

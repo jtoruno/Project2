@@ -53,7 +53,10 @@ class HomeActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
                 val user = FirebaseAuth.getInstance().currentUser
-                val metadata = user?.getMetadata()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+                /*val metadata = user?.getMetadata()
                 Log.e("CREATION",metadata?.creationTimestamp.toString())
                 Log.e("LAST",metadata?.lastSignInTimestamp.toString())
                 if (metadata?.creationTimestamp == metadata?.lastSignInTimestamp) {
@@ -67,7 +70,7 @@ class HomeActivity : AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()
-                }
+                }*/
                 // ...
             } else {
                 //Toast.makeText(this,"Error to signIn",Toast.LENGTH_LONG).show()
