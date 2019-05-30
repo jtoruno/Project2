@@ -18,6 +18,10 @@ import android.widget.LinearLayout
 import com.jtoru.project2.Actitivies.FriendsActivity
 import com.jtoru.project2.Actitivies.ProfileActivity
 import com.jtoru.project2.Utils.MyDialogFragment
+import android.R.attr.fragment
+
+
+
 
 
 class FragmentProfile : Fragment() {
@@ -43,8 +47,6 @@ class FragmentProfile : Fragment() {
         }
 
         goToFriends.setOnClickListener {
-            val i = Intent(activity, FriendsActivity::class.java)
-            startActivity(i)
         }
 
         signOut.setOnClickListener {
