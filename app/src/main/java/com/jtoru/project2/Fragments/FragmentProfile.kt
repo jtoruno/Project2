@@ -19,11 +19,14 @@ import com.firebase.ui.auth.AuthUI
 import com.jtoru.project2.Actitivies.HomeActivity
 import com.jtoru.project2.Actitivies.ProfileActivity
 import android.support.v4.view.ViewPager
-
-
+import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.jtoru.project2.Model.User
 
 
 class FragmentProfile : Fragment() {
+    private lateinit var database: DatabaseReference
     private lateinit var profilePic:ImageView
     private lateinit var profileName: TextView
     private lateinit var goToProfile:TextView
@@ -40,8 +43,13 @@ class FragmentProfile : Fragment() {
         goToSettings = view.findViewById(R.id.lay_goToSettingsProfile)
         signOut = view.findViewById(R.id.lay_signOutProfile)
 
+        database = FirebaseDatabase.getInstance().reference
+
         goToProfile.setOnClickListener {
+            val currentUser = FirebaseAuth.getInstance().currentUser
             val i = Intent(activity, ProfileActivity::class.java)
+            i.putExtra("owner", true)
+            i.putExtra("id",currentUser?.uid)
             startActivity(i)
         }
 
@@ -70,11 +78,31 @@ class FragmentProfile : Fragment() {
             }
             MyDialogFragment().show(fragmentManager!!,"HALP")
         }
+        getUser()
+        
 
 
 
         // Inflate the layout for this fragment
         return view
+    }
+
+    private fun getUser(){
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val query = database.child("users").child(currentUser?.uid!!)
+        val listener = object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Log.w("ProfileActivity",p0.toException())
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                val user = p0.getValue(User::class.java)
+                if (user!= null){
+                    profileName.text = user.name
+                }
+            }
+        }
+        query.addValueEventListener(listener)
     }
 
 
