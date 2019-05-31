@@ -13,11 +13,11 @@ import com.google.firebase.auth.AdditionalUserInfo
 import com.google.firebase.auth.FirebaseAuth
 import com.jtoru.project2.R
 import com.google.firebase.auth.FirebaseUserMetadata
-
+import com.google.firebase.database.*
 
 
 class HomeActivity : AppCompatActivity() {
-
+    lateinit var database: DatabaseReference
     companion object {
         private const val RC_SIGN_IN = 123
     }
@@ -26,6 +26,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         FirebaseApp.initializeApp(this)
+        database = FirebaseDatabase.getInstance().reference
         authScreen()
 
     }
@@ -53,25 +54,27 @@ class HomeActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 // Successfully signed in
                 val user = FirebaseAuth.getInstance().currentUser
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-                /*val metadata = user?.getMetadata()
-                Log.e("CREATION",metadata?.creationTimestamp.toString())
-                Log.e("LAST",metadata?.lastSignInTimestamp.toString())
-                if (metadata?.creationTimestamp == metadata?.lastSignInTimestamp) {
-                    // The user is new, show them a fancy intro screen!
-                    val intent = Intent(this, RegisterActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                database.addListenerForSingleValueEvent(object:ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
 
-                } else {
-                    // This is an existing user, show them a welcome back screen.
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }*/
-                // ...
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if(!p0.child("users").hasChild(user?.uid!!))
+                        {
+                            val intent = Intent(this@HomeActivity, RegisterActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                        else
+                        {
+                            val intent = Intent(this@HomeActivity, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+                })
+
             } else {
                 //Toast.makeText(this,"Error to signIn",Toast.LENGTH_LONG).show()
                 finish()

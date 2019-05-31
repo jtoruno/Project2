@@ -7,7 +7,6 @@ import java.util.logging.SimpleFormatter
 class User(
     var id:String,
     var name:String,
-    var lastname:String,
     var profilePic:String?,
     var pictures:List<String>,
     var education:List<String>,
@@ -15,7 +14,7 @@ class User(
     var birth: String,
     var cellphone:String,
     var email:String,
-    var gender:Boolean
+    var gender:String
     ){
 
     fun convertDate():String{

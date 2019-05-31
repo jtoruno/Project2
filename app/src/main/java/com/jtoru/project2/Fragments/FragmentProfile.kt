@@ -1,7 +1,7 @@
 package com.jtoru.project2.Fragments
 
 
-import android.app.AlertDialog
+
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,16 +12,13 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import com.jtoru.project2.R
-import kotlinx.android.synthetic.*
-import com.jtoru.project2.Actitivies.MainActivity
 import android.content.Intent
 import android.support.v4.app.DialogFragment
 import android.widget.LinearLayout
 import com.firebase.ui.auth.AuthUI
 import com.jtoru.project2.Actitivies.HomeActivity
-import com.jtoru.project2.Actitivies.FriendsActivity
 import com.jtoru.project2.Actitivies.ProfileActivity
-
+import android.support.v4.view.ViewPager
 
 
 
@@ -49,8 +46,8 @@ class FragmentProfile : Fragment() {
         }
 
         goToFriends.setOnClickListener {
-            val i = Intent(activity!!, FriendsActivity::class.java)
-            startActivity(i)
+            val vp = activity!!.findViewById(com.jtoru.project2.R.id.viewpager) as ViewPager
+            vp.currentItem = 1
         }
 
         signOut.setOnClickListener {

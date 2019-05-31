@@ -90,4 +90,5 @@ class MainActivity : AppCompatActivity() {
             viewPager.currentItem = 0
         }
     }
+
 }
