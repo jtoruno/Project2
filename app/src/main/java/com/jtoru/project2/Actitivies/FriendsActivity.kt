@@ -12,6 +12,7 @@ class FriendsActivity : AppCompatActivity() {
     private lateinit var viewPagerFriends: ViewPager
     private var TAG:String = "MainActivity"
     private lateinit var mFragmentFriendsAdapter: FragmentFriendsAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friends)

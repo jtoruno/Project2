@@ -30,6 +30,11 @@ class ProfileActivity : AppCompatActivity() {
             i.putExtra("owner",owner)
             startActivity(i)
         }
+        btn_viewFriendsProfile.setOnClickListener {
+            val i = Intent(this,FriendsActivity::class.java)
+            startActivity(i)
+        }
+
         getUser()
     }
 
