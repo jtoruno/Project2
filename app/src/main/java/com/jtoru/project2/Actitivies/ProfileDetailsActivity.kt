@@ -50,8 +50,6 @@ class ProfileDetailsActivity : AppCompatActivity() {
         if (owner == true)
         {
             btn_edit_profile_details.visibility = View.VISIBLE
-            btn_cancel_profile_details.visibility = View.VISIBLE
-            btn_save_profile_details.visibility = View.VISIBLE
             btn_edit_profile_details.isEnabled = true
         }
         img_calendar_details.setOnClickListener {
@@ -129,6 +127,8 @@ class ProfileDetailsActivity : AppCompatActivity() {
         img_calendar_details.isEnabled = true
         spin_gender_profile_details.isEnabled = true
         spin_gender_profile_details.isClickable = true
+        btn_cancel_profile_details.visibility = View.VISIBLE
+        btn_save_profile_details.visibility = View.VISIBLE
         btn_save_profile_details.isEnabled = true
         btn_cancel_profile_details.isEnabled = true
     }
@@ -139,8 +139,12 @@ class ProfileDetailsActivity : AppCompatActivity() {
         img_calendar_details.isEnabled = false
         spin_gender_profile_details.isEnabled = false
         spin_gender_profile_details.isClickable = false
+        btn_cancel_profile_details.visibility = View.GONE
+        btn_save_profile_details.visibility = View.GONE
         btn_save_profile_details.isEnabled = false
         btn_cancel_profile_details.isEnabled = false
+        btn_save_profile_details.isClickable = false
+        btn_cancel_profile_details.isClickable = false
         getUser()
     }
 
@@ -167,11 +171,11 @@ class ProfileDetailsActivity : AppCompatActivity() {
         userHash.set("name",name)
         database.child("users").child(currentUser?.uid?:"Error").updateChildren(userHash)
             .addOnSuccessListener {
-                Toast.makeText(this@ProfileDetailsActivity, "Edited Correctly", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ProfileDetailsActivity, "Edited Correctly", Toast.LENGTH_SHORT).show()
                 cancelEdit()
             }
             .addOnFailureListener {
-                Toast.makeText(this@ProfileDetailsActivity, "Error with data", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@ProfileDetailsActivity, "Error with data", Toast.LENGTH_SHORT).show()
             }
     }
 }
