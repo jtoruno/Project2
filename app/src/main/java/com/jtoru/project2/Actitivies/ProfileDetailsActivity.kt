@@ -1,11 +1,15 @@
 package com.jtoru.project2.Actitivies
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.jtoru.project2.Model.User
 import com.jtoru.project2.R
@@ -58,6 +62,9 @@ class ProfileDetailsActivity : AppCompatActivity() {
         }
         btn_cancel_profile_details.setOnClickListener {
             cancelEdit()
+        }
+        btn_save_profile_details.setOnClickListener {
+            saveUser()
         }
     }
 
@@ -124,7 +131,6 @@ class ProfileDetailsActivity : AppCompatActivity() {
         spin_gender_profile_details.isClickable = true
         btn_save_profile_details.isEnabled = true
         btn_cancel_profile_details.isEnabled = true
-
     }
     private fun cancelEdit(){
         input_name_details.isEnabled = false
@@ -135,5 +141,37 @@ class ProfileDetailsActivity : AppCompatActivity() {
         spin_gender_profile_details.isClickable = false
         btn_save_profile_details.isEnabled = false
         btn_cancel_profile_details.isEnabled = false
+        getUser()
+    }
+
+    fun saveUser(){
+        val userHash:HashMap<String,Any> = hashMapOf()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val name = input_name_details.text.toString()
+        val city = input_city_details.text.toString()
+        val birth = datePicker_details.text.toString()
+        val number = input_phone_details.text.toString()
+        val gender = spin_gender_profile_details.selectedItem.toString()
+        if (TextUtils.isEmpty(city)) {
+            input_cityRegister.error = "Required"
+            return
+        }
+        if (TextUtils.isEmpty(number)) {
+            input_phoneRegister.error = "Required"
+            return
+        }
+        userHash.set("birth",birth)
+        userHash.set("cellphone",number)
+        userHash.set("city",city)
+        userHash.set("gender",gender)
+        userHash.set("name",name)
+        database.child("users").child(currentUser?.uid?:"Error").updateChildren(userHash)
+            .addOnSuccessListener {
+                Toast.makeText(this@ProfileDetailsActivity, "Edited Correctly", Toast.LENGTH_LONG).show()
+                cancelEdit()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this@ProfileDetailsActivity, "Error with data", Toast.LENGTH_LONG).show()
+            }
     }
 }

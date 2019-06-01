@@ -99,7 +99,7 @@
             android:id="@+id/btn_cancel_profile_details" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone"/>
+            android:visibility="gone" android:textAllCaps="false"/>
     <Button
             android:backgroundTint="@color/colorPrimary"
             android:textColor="#FFFF"
