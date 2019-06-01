@@ -31,7 +31,5 @@ class SearchActivity : AppCompatActivity() {
         adapter.addFragment(FragmentPeopleSearch(),"People")
         adapter.addFragment(FragmentPostsSearch(),"Posts")
         viewPager.adapter = adapter
-
-
     }
 }

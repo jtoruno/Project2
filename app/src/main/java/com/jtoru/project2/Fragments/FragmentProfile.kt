@@ -68,9 +68,8 @@ class FragmentProfile : Fragment() {
                             dialog.dismiss()
                             AuthUI.getInstance().signOut(activity!!)
                             activity?.finishAffinity()
-                            val i = Intent(getActivity(), HomeActivity::class.java)
+                            val i = Intent(activity, HomeActivity::class.java)
                             startActivity(i)
-
                         }
                         .setNegativeButton("No",null)
                         .create()
