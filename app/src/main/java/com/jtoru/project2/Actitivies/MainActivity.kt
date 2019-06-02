@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.search_action)
         {
-            val i = Intent(this, SearchActivity::class.java)
+            val i = Intent(this, SearchTestActivity::class.java)
             startActivity(i)
             return true
         }

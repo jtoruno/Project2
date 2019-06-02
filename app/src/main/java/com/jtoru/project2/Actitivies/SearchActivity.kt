@@ -16,7 +16,8 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
         supportActionBar?.title = "Search!"
-
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
         //Fragments
         mFragmentSearchAdapter = FragmentSearchAdapter(supportFragmentManager)
         viewPagerSearch = findViewById(R.id.viewpagerSearch)
@@ -31,5 +32,14 @@ class SearchActivity : AppCompatActivity() {
         adapter.addFragment(FragmentPeopleSearch(),"People")
         adapter.addFragment(FragmentPostsSearch(),"Posts")
         viewPager.adapter = adapter
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }
