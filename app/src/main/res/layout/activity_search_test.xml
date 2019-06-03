@@ -7,24 +7,21 @@
         android:layout_height="match_parent"
         tools:context=".Actitivies.SearchTestActivity">
 
-    <android.support.design.widget.TextInputLayout
+    <android.support.v7.widget.SearchView android:layout_width="match_parent"
+                                          android:layout_height="wrap_content" android:layout_marginTop="8dp"
+                                          app:layout_constraintTop_toTopOf="parent"
+                                          app:layout_constraintStart_toStartOf="parent"
+                                          android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
+                                          android:layout_marginEnd="8dp" android:id="@+id/searchView">
+
+    </android.support.v7.widget.SearchView>
+
+    <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:id="@+id/lay_test">
-
-        <android.support.design.widget.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="hint" android:id="@+id/input_test"/>
-    </android.support.design.widget.TextInputLayout>
-    <android.support.v7.widget.RecyclerView
-            android:layout_width="395dp"
-            android:layout_height="651dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/lay_test" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/recycler_test"/>
+            android:id="@+id/recycler_test" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/searchView" app:layout_constraintHorizontal_bias="1.0"
+    />
 </android.support.constraint.ConstraintLayout>

@@ -1,10 +1,12 @@
 package com.jtoru.project2.Actitivies
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -21,13 +23,14 @@ import com.jtoru.project2.R
 import com.jtoru.project2.Utils.ItemViewHolder
 
 class SearchTestActivity : AppCompatActivity() {
+    lateinit var searchView : SearchView
     lateinit var recyclerView : RecyclerView
     lateinit var database: FirebaseDatabase
     lateinit var mRef: DatabaseReference
     private lateinit var manager: LinearLayoutManager
     private var adapter : FirebaseRecyclerAdapter<User, ItemViewHolder>? = null
     private lateinit var filterText: TextInputEditText
-    private var textQuery = ""
+    private var textQuery = "J"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_test)
@@ -39,47 +42,63 @@ class SearchTestActivity : AppCompatActivity() {
         manager.stackFromEnd = true
         recyclerView.layoutManager = manager
         database = FirebaseDatabase.getInstance()
-        mRef = database.getReference("users").ref
-        filterText = findViewById(R.id.input_test)
-        filterText.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(p0: Editable?) {
-
+        mRef = database.reference.child("users")
+        searchView = findViewById(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                queryInfo(p0?:"")
+                return true
             }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                queryInfo(p0.toString())
+            override fun onQueryTextChange(p0: String?): Boolean {
+                return true
             }
 
         })
+        //queryInfo()
+
     }
 
-    fun queryInfo(text:String){
-        Log.e("Error","FAGIT")
-        val itemQuery: Query = mRef//.orderByChild("name")//.startAt(text).endAt(text + "\uf8ff")
+    fun queryInfo(value : String){
+        Log.e("Error","FAGIT "+value)
+        //val itemQuery: Query = mRef//.orderByChild("name")//.startAt(text).endAt(text + "\uf8ff")
+        val mquery = FirebaseDatabase.getInstance()
+            .reference
+            .child("users")
+            .orderByChild("name")
+            .startAt(value)
+            .endAt(value + "\uf8ff")
         val options =  FirebaseRecyclerOptions.Builder<User>()
-            .setQuery(itemQuery, User::class.java)
+            .setQuery(mquery, User::class.java)
             .build()
-        var adapter = object : FirebaseRecyclerAdapter<User, ItemViewHolder>(options){
+        adapter = object : FirebaseRecyclerAdapter<User, ItemViewHolder>(options){
             override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ItemViewHolder {
                 val inflater = LayoutInflater.from(p0.context)
                 return ItemViewHolder(inflater.inflate(R.layout.friends_row, p0,false))
             }
 
             override fun onBindViewHolder(holder: ItemViewHolder, position: Int, model: User) {
+                Log.e("Holder",model.name + " Hello")
+                holder.itemView.setOnClickListener {
+                    val intent = Intent(this@SearchTestActivity, ProfileActivity::class.java)
+                    intent.putExtra("id",model.id)
+                    startActivity(intent)
+                }
                 holder.bindToItem(model)
+
             }
         }
+        adapter?.notifyDataSetChanged()
         recyclerView.adapter = adapter
+        adapter?.startListening()
     }
 
 
 
     override fun onStart() {
         super.onStart()
+        adapter?.startListening()
+        /*
         val options =  FirebaseRecyclerOptions.Builder<User>()
             .setQuery(mRef, User::class.java)
             .build()
@@ -94,11 +113,13 @@ class SearchTestActivity : AppCompatActivity() {
             }
         }
         recyclerView.adapter = adapter
+        */
 
     }
 
     override fun onStop() {
         super.onStop()
+        adapter?.stopListening()
 
     }
 }

@@ -30,6 +30,7 @@
                 android:enabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColorHint="@color/CustomGray"
                 android:hint="Name" android:id="@+id/input_name_details"/>
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
