@@ -125,19 +125,16 @@ class ProfileActivity : AppCompatActivity() {
                         if (friendship?.status == true) {
                             state = FriendshipState.ACCEPTED
                             btn_addFriendProfile.setImageResource(R.drawable.ic_check_box_black_24dp)
-                            btn_addFriendProfile.setColorFilter(R.color.colorPrimary)
                             btn_addFriendProfile.isEnabled = true
                             btn_addFriendProfile.visibility = View.VISIBLE
                         } else {
                             if (friendship?.sender == user1) {
                                 state = FriendshipState.WAITING
                                 btn_addFriendProfile.setImageResource(R.drawable.ic_transfer_within_a_station_black_24dp)
-                                btn_addFriendProfile.clearColorFilter()
                                 btn_addFriendProfile.isEnabled = false
                             } else {
                                 state = FriendshipState.PENDING
                                 btn_addFriendProfile.setImageResource(R.drawable.ic_transfer_within_a_station_black_24dp)
-                                btn_addFriendProfile.clearColorFilter()
                                 btn_addFriendProfile.isEnabled = true
                             }
 
@@ -245,6 +242,16 @@ class ProfileActivity : AppCompatActivity() {
             .addOnFailureListener {
                 Toast.makeText(this@ProfileActivity, "Friend not deleted :)", Toast.LENGTH_SHORT).show()
             }
+        database.child("friendship").child("$user1&$user2").removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(this@ProfileActivity, "Friend deleted :(", Toast.LENGTH_SHORT).show()
+                state = FriendshipState.ADD
+                btn_addFriendProfile.setImageResource(R.drawable.ic_person_add_black_24dp)
+                btn_addFriendProfile.isEnabled = true
+            }
+            .addOnFailureListener {
+                Toast.makeText(this@ProfileActivity, "Friend not deleted :)", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun acceptFriend(){
@@ -255,7 +262,6 @@ class ProfileActivity : AppCompatActivity() {
                 Toast.makeText(this@ProfileActivity, "Friend accepted!", Toast.LENGTH_SHORT).show()
                 state = FriendshipState.ACCEPTED
                 btn_addFriendProfile.setImageResource(R.drawable.ic_check_box_black_24dp)
-                btn_addFriendProfile.setBackgroundColor(getResources().getColor(R.color.colorPrimary))
                 btn_addFriendProfile.isEnabled = true
             }
             .addOnFailureListener {
