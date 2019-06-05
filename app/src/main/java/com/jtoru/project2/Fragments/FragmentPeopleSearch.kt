@@ -1,11 +1,13 @@
 package com.jtoru.project2.Fragments
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SearchView
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -24,6 +26,7 @@ import com.google.firebase.database.Query
 import com.jtoru.project2.Actitivies.ProfileActivity
 
 class FragmentPeopleSearch : Fragment() {
+    lateinit var searchView : SearchView
     lateinit var recyclerView : RecyclerView
     lateinit var database: FirebaseDatabase
     lateinit var mRef: DatabaseReference
@@ -45,44 +48,55 @@ class FragmentPeopleSearch : Fragment() {
         database = FirebaseDatabase.getInstance()
         //mRef = database.getReference("users")
         mRef = database.reference
-        filterText = activity!!.findViewById(R.id.input_search)
-        /*filterText.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(p0: Editable?) {
+        searchView = activity!!.findViewById(R.id.searchView)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                queryInfo(p0?:"")
+                return true
             }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            override fun onQueryTextChange(p0: String?): Boolean {
+                return true
             }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                queryInfo(p0.toString())
-            }
+        })
 
-        })*/
-        btnSearch = activity!!.findViewById(R.id.btn_search)
-        btnSearch.setOnClickListener {
-            queryInfo(filterText.text.toString())
-        }
 
         return view
     }
 
-    fun queryInfo(text:String){
-        Log.e("Error","FAGIT")
-        val itemQuery:Query = mRef.child("users")//.orderByChild("name").startAt(text).endAt(text + "\uf8ff")
+    fun queryInfo(value : String){
+        Log.e("Error","FAGIT "+value)
+        //val itemQuery: Query = mRef//.orderByChild("name")//.startAt(text).endAt(text + "\uf8ff")
+        val mquery = FirebaseDatabase.getInstance()
+            .reference
+            .child("users")
+            .orderByChild("name")
+            .startAt(value)
+            .endAt(value + "\uf8ff")
         val options =  FirebaseRecyclerOptions.Builder<User>()
-            .setQuery(itemQuery, User::class.java)
+            .setQuery(mquery, User::class.java)
             .build()
-        var adapter = object : FirebaseRecyclerAdapter<User, ItemViewHolder>(options){
+        adapter = object : FirebaseRecyclerAdapter<User, ItemViewHolder>(options){
             override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ItemViewHolder {
-                val inflater = LayoutInflater.from(activity!!)
+                val inflater = LayoutInflater.from(p0.context)
                 return ItemViewHolder(inflater.inflate(R.layout.friends_row, p0,false))
             }
 
             override fun onBindViewHolder(holder: ItemViewHolder, position: Int, model: User) {
+                Log.e("Holder",model.name + " Hello")
+                holder.itemView.setOnClickListener {
+                    val intent = Intent(activity!!, ProfileActivity::class.java)
+                    intent.putExtra("id",model.id)
+                    startActivity(intent)
+                }
                 holder.bindToItem(model)
+
             }
         }
+        adapter?.notifyDataSetChanged()
         recyclerView.adapter = adapter
+        adapter?.startListening()
     }
 
 
