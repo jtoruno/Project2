@@ -13,7 +13,11 @@ import com.jtoru.project2.Model.Friendship
 import com.jtoru.project2.Model.User
 import com.jtoru.project2.R
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.activity_profile.view.*
 import kotlinx.android.synthetic.main.activity_register.*
+import com.google.firebase.database.GenericTypeIndicator
+
+
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -77,8 +81,9 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         getUser()
-        setFriendshipState()
-        Log.e("ONCREATE",state.toString())
+        //setFriendshipState()
+        //Log.e("ONCREATE",state.toString())
+        test()
 
     }
 
@@ -97,6 +102,62 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
         query.addValueEventListener(listener)
+    }
+
+    private fun test()
+    {
+        var user1 = FirebaseAuth.getInstance().currentUser?.uid
+        var user2 = id
+        var userKey1 = user1 + "&" + user2
+        var userKey2 = user2 + "&" + user1
+        val query1 = database.child("friendship")
+        val listener = object : ValueEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+                Log.w("ProfileActivity",p0.toException())
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                var check = false
+                for (postSnapshot in p0.children) {
+                    if(postSnapshot.key == userKey1 || postSnapshot.key == userKey2){
+                        check = true
+                        val friendship = postSnapshot.getValue(Friendship::class.java)
+                        if (friendship?.status == true) {
+                            state = FriendshipState.ACCEPTED
+                            btn_addFriendProfile.setImageResource(R.drawable.ic_check_box_black_24dp)
+                            btn_addFriendProfile.setColorFilter(R.color.colorPrimary)
+                            btn_addFriendProfile.isEnabled = true
+                            btn_addFriendProfile.visibility = View.VISIBLE
+                        } else {
+                            if (friendship?.sender == user1) {
+                                state = FriendshipState.WAITING
+                                btn_addFriendProfile.setImageResource(R.drawable.ic_transfer_within_a_station_black_24dp)
+                                btn_addFriendProfile.clearColorFilter()
+                                btn_addFriendProfile.isEnabled = false
+                            } else {
+                                state = FriendshipState.PENDING
+                                btn_addFriendProfile.setImageResource(R.drawable.ic_transfer_within_a_station_black_24dp)
+                                btn_addFriendProfile.clearColorFilter()
+                                btn_addFriendProfile.isEnabled = true
+                            }
+
+                        }
+                        Log.e("After",state.toString())
+                    }
+
+                }
+                if(!check)
+                {
+                    state = FriendshipState.ADD
+                    btn_addFriendProfile.setImageResource(R.drawable.ic_person_add_black_24dp)
+                    btn_addFriendProfile.clearColorFilter()
+                    btn_addFriendProfile.isEnabled = true
+                    Log.e("AfterElse",state.toString())
+                }
+            }
+
+        }
+        query1.addValueEventListener(listener)
     }
 
     private fun setFriendshipState()
@@ -118,17 +179,19 @@ class ProfileActivity : AppCompatActivity() {
                     if (friendship.status == true) {
                         state = FriendshipState.ACCEPTED
                         btn_addFriendProfile.setImageResource(R.drawable.ic_check_box_black_24dp)
-                        btn_addFriendProfile.setBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        btn_addFriendProfile.setColorFilter(R.color.colorPrimary)
                         btn_addFriendProfile.isEnabled = true
                         btn_addFriendProfile.visibility = View.VISIBLE
                     } else {
                         if (friendship.sender == user1) {
                             state = FriendshipState.WAITING
                             btn_addFriendProfile.setImageResource(R.drawable.ic_transfer_within_a_station_black_24dp)
+                            btn_addFriendProfile.clearColorFilter()
                             btn_addFriendProfile.isEnabled = false
                         } else {
                             state = FriendshipState.PENDING
                             btn_addFriendProfile.setImageResource(R.drawable.ic_transfer_within_a_station_black_24dp)
+                            btn_addFriendProfile.clearColorFilter()
                             btn_addFriendProfile.isEnabled = true
                         }
 
@@ -139,6 +202,7 @@ class ProfileActivity : AppCompatActivity() {
                 {
                     state = FriendshipState.ADD
                     btn_addFriendProfile.setImageResource(R.drawable.ic_person_add_black_24dp)
+                    btn_addFriendProfile.clearColorFilter()
                     btn_addFriendProfile.isEnabled = true
                     Log.e("AfterElse",state.toString())
                 }
@@ -186,7 +250,7 @@ class ProfileActivity : AppCompatActivity() {
     private fun acceptFriend(){
         var user1 = FirebaseAuth.getInstance().currentUser?.uid
         var user2 = id
-        database.child("friendship").child("$user2&$user1").removeValue()
+        database.child("friendship").child("$user2&$user1").child("status").setValue(true)
             .addOnSuccessListener {
                 Toast.makeText(this@ProfileActivity, "Friend accepted!", Toast.LENGTH_SHORT).show()
                 state = FriendshipState.ACCEPTED
