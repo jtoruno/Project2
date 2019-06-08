@@ -139,7 +139,7 @@ class ProfileActivity : AppCompatActivity() {
                             if (friendship?.sender == user1) {
                                 state = FriendshipState.WAITING
                                 btn_addFriendProfile.setImageResource(R.drawable.ic_transfer_within_a_station_black_24dp)
-                                btn_addFriendProfile.isEnabled = false
+                                btn_addFriendProfile.isEnabled = true
                             } else {
                                 state = FriendshipState.PENDING
                                 btn_addFriendProfile.setImageResource(R.drawable.ic_transfer_within_a_station_black_24dp)
@@ -232,7 +232,7 @@ class ProfileActivity : AppCompatActivity() {
                 state = FriendshipState.WAITING
                 Log.e("ONREQUEST",state.toString())
                 btn_addFriendProfile.setImageResource(R.drawable.ic_transfer_within_a_station_black_24dp)
-                btn_addFriendProfile.isEnabled = false
+                btn_addFriendProfile.isEnabled = true
             }
             .addOnFailureListener {
                 Toast.makeText(this@ProfileActivity, "Friend request not send!", Toast.LENGTH_SHORT).show()

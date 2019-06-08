@@ -57,7 +57,13 @@ class FragmentNotifications : Fragment() {
             }
 
             override fun onBindViewHolder(holder: NotificationViewHolder, position: Int, model: Friendship) {
-                holder.bindToItem(model)
+                if(model.status == false) {
+                    holder.bindToItem(model)
+                }
+                else
+                {
+                    holder.itemView.visibility = View.GONE
+                }
             }
 
         }
