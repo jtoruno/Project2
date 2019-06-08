@@ -23,6 +23,8 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.jtoru.project2.Model.User
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_profile.*
 
 
 class FragmentProfile : Fragment() {
@@ -98,6 +100,10 @@ class FragmentProfile : Fragment() {
                 val user = p0.getValue(User::class.java)
                 if (user!= null){
                     profileName.text = user.name
+                    var pp = user.profilePic
+                    if(pp != null && pp.isNotEmpty()) {
+                        Picasso.get().load(pp).error(R.drawable.download).into(profilePic)
+                    }
                 }
             }
         }
