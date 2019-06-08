@@ -22,7 +22,7 @@ class NotificationViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView
         itemView.btn_declineNotification.setOnClickListener {
             deleteFriend(user.sender?:"",user.receiver?:"")
         }
-        getUser(user.receiver?:"")
+        getUser(user.sender?:"")
     }
 
     private fun getUser(id:String) {
@@ -35,7 +35,7 @@ class NotificationViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView
             override fun onDataChange(p0: DataSnapshot) {
                 val user = p0.getValue(User::class.java)
                 if (user != null) {
-                    itemView.user_not_txt_row.text = user?.name
+                    itemView.user_not_txt_row.text = user.name
                     var pp = user.profilePic
                     if(pp != null && pp.isNotEmpty()) {
                         Picasso.get().load(pp).error(R.drawable.download).into(itemView.img_picNotification)
