@@ -6,6 +6,7 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -54,10 +55,7 @@ class ProfileActivity : AppCompatActivity() {
             i.putExtra("owner", owner)
             startActivity(i)
         }
-        btn_viewFriendsProfile.setOnClickListener {
-            val i = Intent(this, FriendsActivity::class.java)
-            startActivity(i)
-        }
+
 
         btn_addFriendProfile.setOnClickListener {
             Log.e("ONCLICK", state.toString())
@@ -82,9 +80,19 @@ class ProfileActivity : AppCompatActivity() {
         if (!owner) {
             setFriendshipState()
             btn_addFriendProfile.visibility = View.VISIBLE
+            btn_viewFriendsProfile.setOnClickListener {
+                val i = Intent(this, FriendsActivity::class.java)
+                i.putExtra("id", id)
+                startActivity(i)
+            }
         } else {
             img_profilePic.setOnClickListener {
                 changeProfilePic()
+            }
+            btn_viewFriendsProfile.setOnClickListener {
+                val i = Intent(this, MyFriendsActivity::class.java)
+                i.putExtra("id", id)
+                startActivity(i)
             }
         }
 

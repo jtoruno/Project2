@@ -13,6 +13,9 @@ import com.firebase.ui.auth.AuthUI
 import com.jtoru.project2.Fragments.*
 import com.jtoru.project2.R
 
+
+
+
 class MainActivity : AppCompatActivity() {
     private lateinit var viewPager: ViewPager
     private var TAG:String = "MainActivity"

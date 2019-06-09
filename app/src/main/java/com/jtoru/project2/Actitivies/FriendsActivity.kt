@@ -11,33 +11,20 @@ import com.jtoru.project2.R
 class FriendsActivity : AppCompatActivity() {
     private lateinit var viewPagerFriends: ViewPager
     private var TAG:String = "MainActivity"
+    private var id: String = ""
     private lateinit var mFragmentFriendsAdapter: FragmentFriendsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friends)
         supportActionBar?.title = "Friends"
-
+        id = this.intent.getStringExtra("id")
         //Fragments
         mFragmentFriendsAdapter = FragmentFriendsAdapter(supportFragmentManager)
         viewPagerFriends = findViewById(R.id.viewpagerFriends)
         setupViewPager(viewPagerFriends)
         var tabLayout: TabLayout = findViewById(R.id.tabsFriends)
         tabLayout.setupWithViewPager(viewPagerFriends)
-        //tabLayout.getTabAt(0)?.icon?.setTint(resources.getColor(R.color.colorPrimary, null))
-        /*tabLayout.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab>{
-            override fun onTabReselected(p0: TabLayout.Tab?) {
-            }
-
-            override fun onTabUnselected(p0: TabLayout.Tab?) {
-                //p0?.icon?.setTint(resources.getColor(R.color.CustomGray, null))
-            }
-
-            override fun onTabSelected(p0: TabLayout.Tab?) {
-                //p0?.icon?.setTint(resources.getColor(R.color.colorPrimary, null))
-
-            }
-        })*/
     }
     fun setupViewPager(viewPager:ViewPager)
     {
@@ -52,5 +39,8 @@ class FriendsActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.search_menu, menu)
         return true
+    }
+    fun getId():String{
+        return this.id
     }
 }
