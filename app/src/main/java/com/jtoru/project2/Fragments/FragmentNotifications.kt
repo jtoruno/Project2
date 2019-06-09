@@ -63,6 +63,7 @@ class FragmentNotifications : Fragment() {
                 else
                 {
                     holder.itemView.visibility = View.GONE
+                    holder.itemView.layoutParams = RecyclerView.LayoutParams(0, 0)
                 }
             }
 

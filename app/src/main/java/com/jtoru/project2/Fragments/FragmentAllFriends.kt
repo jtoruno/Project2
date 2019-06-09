@@ -23,6 +23,8 @@ import com.jtoru.project2.Utils.FriendViewHolder
 
 
 
+
+
 class FragmentAllFriends : Fragment() {
     private lateinit var myActivity: FriendsActivity
     private var id: String = ""
@@ -51,7 +53,7 @@ class FragmentAllFriends : Fragment() {
 
     private fun query(){
         id = myActivity.getId()
-        val query = mRef.child("friendship")
+        val query = mRef.child("friendship").orderByChild("status").equalTo(true)
         val options = FirebaseRecyclerOptions.Builder<Friendship>()
             .setQuery(query, Friendship::class.java)
             .build()
@@ -59,13 +61,13 @@ class FragmentAllFriends : Fragment() {
         adapter = object : FirebaseRecyclerAdapter<Friendship, FriendViewHolder>(options){
             override fun onCreateViewHolder(p0: ViewGroup, p1: Int): FriendViewHolder {
                 val inflater = LayoutInflater.from(p0.context)
-                return FriendViewHolder(inflater.inflate(com.jtoru.project2.R.layout.friends_row,p0,false))
+                return FriendViewHolder(inflater.inflate(R.layout.friends_row,p0,false))
             }
 
             override fun onBindViewHolder(holder: FriendViewHolder, position: Int, model: Friendship) {
-                if((model.sender == id || model.receiver == id) && model.status == true) {
+                if(model.sender == id || model.receiver == id) {
                     holder.bindToItem(model)
-                    if(model.sender != id && model.receiver != id)
+                    if(model.sender != id)
                     {
                         holder.itemView.setOnClickListener {
                             val intent = Intent(activity!!, ProfileActivity::class.java)
@@ -75,12 +77,17 @@ class FragmentAllFriends : Fragment() {
                     }
                     else
                     {
-                        holder.itemView.visibility = View.GONE
+                        holder.itemView.setOnClickListener {
+                            val intent = Intent(activity!!, ProfileActivity::class.java)
+                            intent.putExtra("id", model.receiver)
+                            startActivity(intent)
+                        }
                     }
                 }
                 else
                 {
                     holder.itemView.visibility = View.GONE
+                    holder.itemView.layoutParams = RecyclerView.LayoutParams(0, 0)
                 }
             }
 
