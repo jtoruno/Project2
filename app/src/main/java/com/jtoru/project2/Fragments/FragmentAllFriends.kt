@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,6 +54,8 @@ class FragmentAllFriends : Fragment() {
     private fun query(){
         id = myActivity.getId()
         var me = FirebaseAuth.getInstance().currentUser?.uid
+        //Log.e("id",id)
+        //Log.e("me",me)
         val query = mRef.child("friendship").orderByChild("status").equalTo(true)
         val options = FirebaseRecyclerOptions.Builder<Friendship>()
             .setQuery(query, Friendship::class.java)
@@ -71,7 +74,7 @@ class FragmentAllFriends : Fragment() {
                     {
                         holder.itemView.setOnClickListener {
                             val intent = Intent(activity!!, ProfileActivity::class.java)
-                            if(id == me)
+                            if(model.sender == me)
                             {
                                 intent.putExtra("owner", true)
                             }
@@ -79,15 +82,15 @@ class FragmentAllFriends : Fragment() {
                             startActivity(intent)
                         }
                     }
-                    else
-                    {
-                        val intent = Intent(activity!!, ProfileActivity::class.java)
-                        if(id == me)
-                        {
-                            intent.putExtra("owner", true)
+                    else {
+                        holder.itemView.setOnClickListener {
+                            val intent = Intent(activity!!, ProfileActivity::class.java)
+                            if (model.receiver == me) {
+                                intent.putExtra("owner", true)
+                            }
+                            intent.putExtra("id", model.receiver)
+                            startActivity(intent)
                         }
-                        intent.putExtra("id", model.receiver)
-                        startActivity(intent)
                     }
                 }
                 else
