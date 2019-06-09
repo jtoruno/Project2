@@ -82,7 +82,7 @@ class RegisterActivity : AppCompatActivity() {
         }
         btn_acceptRegister.isEnabled = false
         val user = User(currentUser?.uid?:"",currentUser?.displayName?:"","",
-            mutableListOf(), mutableListOf(),city,birth,number,currentUser?.email?:"",gender)
+            hashMapOf(), mutableListOf(),city,birth,number,currentUser?.email?:"",gender)
         database.child("users").child(currentUser?.uid?:"Error").setValue(user)
             .addOnSuccessListener {
                 Toast.makeText(this@RegisterActivity, "Added Correctly", Toast.LENGTH_SHORT).show()
