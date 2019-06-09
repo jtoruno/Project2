@@ -16,10 +16,11 @@ import kotlinx.android.synthetic.main.friends_row.view.*
 import kotlinx.android.synthetic.main.notification_row.view.*
 
 
-class FriendViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+class MyFriendsViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
     private val database = FirebaseDatabase.getInstance().reference
-    fun bindToItem(user: Friendship, id: String){
-        if(user.sender == id){
+    fun bindToItem(user: Friendship){
+        var currentUser = FirebaseAuth.getInstance().currentUser?.uid
+        if(user.sender == currentUser){
             getUser(user.receiver?:"")
         }
         else

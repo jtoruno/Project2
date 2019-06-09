@@ -18,6 +18,8 @@ class FriendsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friends)
         supportActionBar?.title = "Friends"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
         id = this.intent.getStringExtra("id")
         //Fragments
         mFragmentFriendsAdapter = FragmentFriendsAdapter(supportFragmentManager)
@@ -42,5 +44,14 @@ class FriendsActivity : AppCompatActivity() {
     }
     fun getId():String{
         return this.id
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }

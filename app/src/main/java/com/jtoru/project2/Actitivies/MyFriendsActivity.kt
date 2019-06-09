@@ -3,7 +3,6 @@ package com.jtoru.project2.Actitivies
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -16,7 +15,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.jtoru.project2.Model.Friendship
 import com.jtoru.project2.R
-import com.jtoru.project2.Utils.FriendViewHolder
+import com.jtoru.project2.Utils.MyFriendsViewHolder
 
 class MyFriendsActivity : AppCompatActivity() {
     private var id: String = ""
@@ -24,7 +23,7 @@ class MyFriendsActivity : AppCompatActivity() {
     lateinit var recyclerView : RecyclerView
     lateinit var database: FirebaseDatabase
     lateinit var mRef: DatabaseReference
-    private var adapter : FirebaseRecyclerAdapter<Friendship, FriendViewHolder>? = null
+    private var adapter : FirebaseRecyclerAdapter<Friendship, MyFriendsViewHolder>? = null
     private lateinit var manager: LinearLayoutManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,13 +51,13 @@ class MyFriendsActivity : AppCompatActivity() {
             .setQuery(query, Friendship::class.java)
             .build()
 
-        adapter = object : FirebaseRecyclerAdapter<Friendship,FriendViewHolder>(options){
-            override fun onCreateViewHolder(p0: ViewGroup, p1: Int): FriendViewHolder {
+        adapter = object : FirebaseRecyclerAdapter<Friendship,MyFriendsViewHolder>(options){
+            override fun onCreateViewHolder(p0: ViewGroup, p1: Int): MyFriendsViewHolder {
                 val inflater = LayoutInflater.from(p0.context)
-                return FriendViewHolder(inflater.inflate(R.layout.friends_row,p0,false))
+                return MyFriendsViewHolder(inflater.inflate(R.layout.friends_row,p0,false))
             }
 
-            override fun onBindViewHolder(holder: FriendViewHolder, position: Int, model: Friendship) {
+            override fun onBindViewHolder(holder: MyFriendsViewHolder, position: Int, model: Friendship) {
                 if((model.sender == id || model.receiver == id) && model.status == true) {
                     holder.bindToItem(model)
                     if(model.sender != user)
