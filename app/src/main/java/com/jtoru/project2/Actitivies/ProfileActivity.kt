@@ -23,14 +23,12 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import com.jtoru.project2.Model.EducationUploadInfo
 import com.jtoru.project2.Model.Friendship
 import com.jtoru.project2.Model.ImageUploadInfo
 import com.jtoru.project2.Model.User
 import com.jtoru.project2.R
-import com.jtoru.project2.Utils.MutualFriendsAdapter
-import com.jtoru.project2.Utils.MyFriendsViewHolder
-import com.jtoru.project2.Utils.PhotoAlbumAdapter
-import com.jtoru.project2.Utils.PhotoAlbumViewHolder
+import com.jtoru.project2.Utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
 import java.util.*
@@ -52,6 +50,9 @@ class ProfileActivity : AppCompatActivity() {
     lateinit var adapterAlbum : PhotoAlbumAdapter
     private lateinit var managerPhotos: LinearLayoutManager
     lateinit var photoAlbum : RecyclerView
+    lateinit var adapterEducation : EducationAdapter
+    private lateinit var managerEducation: LinearLayoutManager
+    lateinit var education : RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -62,6 +63,17 @@ class ProfileActivity : AppCompatActivity() {
         id = this.intent.getStringExtra("id")
         database = FirebaseDatabase.getInstance().reference
         mStorageRef = FirebaseStorage.getInstance().reference
+
+
+
+
+        education = findViewById(R.id.recycler_educationProfile)
+        managerEducation = LinearLayoutManager(this)
+        managerEducation.reverseLayout = true
+        managerEducation.stackFromEnd = true
+        education.layoutManager = managerEducation
+        adapterEducation = EducationAdapter()
+        education.adapter = adapterEducation
 
         photoAlbum = findViewById(R.id.recycler_photoProfile)
         managerPhotos = LinearLayoutManager(this)
@@ -126,7 +138,8 @@ class ProfileActivity : AppCompatActivity() {
 
         getUser()
         getPhotos()
-
+        getEducation()
+        getPosts()
     }
 
     private fun getUser() {
@@ -169,6 +182,28 @@ class ProfileActivity : AppCompatActivity() {
             })
     }
 
+    private fun getEducation(){
+        database.child("education").child(id)
+            .addValueEventListener(object: ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    var educations: MutableList<EducationUploadInfo> = mutableListOf()
+                    for (postSnapshot in p0.children ) {
+                        val education = postSnapshot.getValue(EducationUploadInfo::class.java)
+                        var temp = EducationUploadInfo(education?.educationGrade, education?.educationInfo)
+                        educations.add(temp)
+                    }
+                    adapterEducation.setEducation(educations)
+                }
+            })
+    }
+
+    private fun getPosts(){
+
+    }
 
     private fun setFriendshipState() {
         var user1 = FirebaseAuth.getInstance().currentUser?.uid

@@ -4,23 +4,35 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.jtoru.project2.Model.EducationUploadInfo
+import com.jtoru.project2.Model.ImageUploadInfo
 import com.jtoru.project2.Model.User
 import com.jtoru.project2.R
 import com.jtoru.project2.Utils.DatePickerFragment
+import com.jtoru.project2.Utils.EducationAdapter
 import kotlinx.android.synthetic.main.activity_profile_details.*
+import kotlinx.android.synthetic.main.activity_profile_details.view.*
 import kotlinx.android.synthetic.main.activity_register.*
+import java.util.*
 
 class ProfileDetailsActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private var owner = false
     private var id : String = ""
+    private lateinit var btnEducation: TextView
+    lateinit var adapterEducation : EducationAdapter
+    private lateinit var managerEducation: LinearLayoutManager
+    lateinit var education : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +42,19 @@ class ProfileDetailsActivity : AppCompatActivity() {
         database = FirebaseDatabase.getInstance().reference
         owner = this.intent.getBooleanExtra("owner", false)
         id = this.intent.getStringExtra("id")
-        spin_gender_profile_details.setEnabled(false);
-        spin_gender_profile_details.setClickable(false);
-        img_calendar_details.setEnabled(false);
+        btnEducation = findViewById(R.id.txt_addEducation)
+
+        education = findViewById(R.id.recycler_educationDetails)
+        managerEducation = LinearLayoutManager(this)
+        managerEducation.reverseLayout = true
+        managerEducation.stackFromEnd = true
+        education.layoutManager = managerEducation
+        adapterEducation = EducationAdapter()
+        education.adapter = adapterEducation
+
+        spin_gender_profile_details.setEnabled(false)
+        spin_gender_profile_details.setClickable(false)
+        img_calendar_details.setEnabled(false)
         img_calendar_details.setClickable(false);
         val staticAdapter = ArrayAdapter
             .createFromResource(
@@ -47,8 +69,10 @@ class ProfileDetailsActivity : AppCompatActivity() {
         // Apply the adapter to the spinner
         spin_gender_profile_details.adapter = staticAdapter
         getUser()
+        getEducation()
         if (owner == true)
         {
+            btnEducation.visibility = View.VISIBLE
             btn_edit_profile_details.visibility = View.VISIBLE
             btn_edit_profile_details.isEnabled = true
         }
@@ -64,6 +88,9 @@ class ProfileDetailsActivity : AppCompatActivity() {
         btn_save_profile_details.setOnClickListener {
             saveUser()
         }
+        btnEducation.setOnClickListener {
+            addEducation()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -73,6 +100,31 @@ class ProfileDetailsActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         finish()
+    }
+
+    private fun addEducation(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Add education")
+        builder.setMessage("Add education level and info")
+        val view = LayoutInflater.from(this).inflate(R.layout.input_education,null)
+        val inputGrade : EditText = view.findViewById(R.id.input_educationGrade)
+        val inputInfo : EditText = view.findViewById(R.id.input_educationInfo)
+        builder.setView(view)
+        builder.setPositiveButton("Add"){
+                dialog, which ->
+            if(inputGrade.text.toString().isNotEmpty() && inputInfo.text.toString().isNotEmpty()){
+                val edu = EducationUploadInfo(inputGrade.text.toString(),inputInfo.text.toString())
+                database.child("education").child(id).push().setValue(edu)
+            }
+            else{
+                Toast.makeText(this, "Data incorrect", Toast.LENGTH_SHORT).show()
+            }
+        }
+        builder.setNegativeButton("Cancel"){
+                dialog, which ->
+            dialog.cancel()
+        }
+        builder.show()
     }
 
     private fun getUser(){
@@ -105,6 +157,25 @@ class ProfileDetailsActivity : AppCompatActivity() {
             }
         }
         query.addValueEventListener(listener)
+    }
+
+    private fun getEducation(){
+        database.child("education").child(id)
+            .addValueEventListener(object: ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    var educations: MutableList<EducationUploadInfo> = mutableListOf()
+                    for (postSnapshot in p0.children ) {
+                        val education = postSnapshot.getValue(EducationUploadInfo::class.java)
+                        var temp = EducationUploadInfo(education?.educationGrade, education?.educationInfo)
+                        educations.add(temp)
+                    }
+                    adapterEducation.setEducation(educations)
+                }
+            })
     }
     fun showDatePickerDialog(){
         val listener: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener {
