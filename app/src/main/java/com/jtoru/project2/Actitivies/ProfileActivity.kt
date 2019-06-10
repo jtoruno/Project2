@@ -72,7 +72,7 @@ class ProfileActivity : AppCompatActivity() {
         managerEducation.reverseLayout = true
         managerEducation.stackFromEnd = true
         education.layoutManager = managerEducation
-        adapterEducation = EducationAdapter()
+        adapterEducation = EducationAdapter(id,owner,this)
         education.adapter = adapterEducation
 
         photoAlbum = findViewById(R.id.recycler_photoProfile)
@@ -301,8 +301,6 @@ class ProfileActivity : AppCompatActivity() {
         if(requestCode == ADD_PICTURE) {
             if (resultCode == Activity.RESULT_OK) {
                 fileUri = data?.data
-                //val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, fileUri)
-                //Picasso.get().load(fileUri).error(R.drawable.download).into(img_profilePic)
                 val ref = mStorageRef.child(id).child(UUID.randomUUID().toString())
                 var uploadTask = ref.putFile(fileUri!!)
 

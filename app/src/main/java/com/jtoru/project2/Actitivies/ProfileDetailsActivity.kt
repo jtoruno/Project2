@@ -49,7 +49,7 @@ class ProfileDetailsActivity : AppCompatActivity() {
         managerEducation.reverseLayout = true
         managerEducation.stackFromEnd = true
         education.layoutManager = managerEducation
-        adapterEducation = EducationAdapter()
+        adapterEducation = EducationAdapter(id,owner,this)
         education.adapter = adapterEducation
 
         spin_gender_profile_details.setEnabled(false)
@@ -114,7 +114,7 @@ class ProfileDetailsActivity : AppCompatActivity() {
                 dialog, which ->
             if(inputGrade.text.toString().isNotEmpty() && inputInfo.text.toString().isNotEmpty()){
                 val edu = EducationUploadInfo(inputGrade.text.toString(),inputInfo.text.toString())
-                database.child("education").child(id).push().setValue(edu)
+                database.child("education").child(id).child(inputGrade.text.toString()+"&"+inputInfo.text.toString()).setValue(edu)
             }
             else{
                 Toast.makeText(this, "Data incorrect", Toast.LENGTH_SHORT).show()

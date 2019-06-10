@@ -8,15 +8,37 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_educationGrade" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-            android:hint="Grade" android:textColor="@android:color/black" android:textAllCaps="false"
-            android:textStyle="bold" android:textSize="16sp"/>
+            android:id="@+id/txt_educationGrade"
+            android:layout_marginTop="4dp" app:layout_constraintTop_toTopOf="parent"
+            android:hint="Grade" android:textAllCaps="false"
+            android:textSize="16sp" app:layout_constraintStart_toEndOf="@+id/textView"
+    />
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_educationInfo" app:layout_constraintStart_toEndOf="@+id/txt_educationGrade"
-            android:layout_marginStart="16dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-            android:hint="Info" android:textSize="16sp" android:textStyle="bold"
-            android:textColor="@android:color/black"/>
+            android:id="@+id/txt_educationInfo"
+            android:layout_marginTop="4dp" app:layout_constraintTop_toTopOf="parent"
+            android:hint="Info" android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/textView3"
+    />
+    <TextView
+            android:text="Grade: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView" android:textSize="16sp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="4dp" app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+            android:text="Detail: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView3" android:textSize="16sp"
+            android:layout_marginTop="4dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txt_educationGrade" android:layout_marginStart="68dp"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:srcCompat="@drawable/ic_clear_black_24dp"
+            android:id="@+id/img_educationDelete" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" android:layout_marginTop="4dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txt_educationInfo" android:layout_marginStart="8dp"
+            app:layout_constraintHorizontal_bias="0.734" android:visibility="gone"/>
 </android.support.constraint.ConstraintLayout>
