@@ -24,9 +24,12 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import com.jtoru.project2.Model.Friendship
+import com.jtoru.project2.Model.ImageUploadInfo
 import com.jtoru.project2.Model.User
 import com.jtoru.project2.R
+import com.jtoru.project2.Utils.MutualFriendsAdapter
 import com.jtoru.project2.Utils.MyFriendsViewHolder
+import com.jtoru.project2.Utils.PhotoAlbumAdapter
 import com.jtoru.project2.Utils.PhotoAlbumViewHolder
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
@@ -46,7 +49,7 @@ class ProfileActivity : AppCompatActivity() {
     private var id: String = ""
     private var state = FriendshipState.ADD
     private var fileUri: Uri? = null
-    private var adapterAlbum : FirebaseRecyclerAdapter<HashMap<String,String>, PhotoAlbumViewHolder>? = null
+    lateinit var adapterAlbum : PhotoAlbumAdapter
     private lateinit var managerPhotos: LinearLayoutManager
     lateinit var photoAlbum : RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +69,8 @@ class ProfileActivity : AppCompatActivity() {
         managerPhotos.reverseLayout = true
         managerPhotos.stackFromEnd = true
         photoAlbum.layoutManager = managerPhotos
+        adapterAlbum = PhotoAlbumAdapter(this)
+        photoAlbum.adapter = adapterAlbum
 
         btn_editInfoProfile.setOnClickListener {
             val i = Intent(this, ProfileDetailsActivity::class.java)
@@ -99,6 +104,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         if (!owner) {
+            txt_addPhotoProfile.visibility = View.GONE
             setFriendshipState()
             btn_addFriendProfile.visibility = View.VISIBLE
             btn_viewFriendsProfile.setOnClickListener {
@@ -107,6 +113,7 @@ class ProfileActivity : AppCompatActivity() {
                 startActivity(i)
             }
         } else {
+            txt_addPhotoProfile.visibility = View.VISIBLE
             img_profilePic.setOnClickListener {
                 changeProfilePic()
             }
@@ -118,7 +125,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         getUser()
-        //getPhotos()
+        getPhotos()
 
     }
 
@@ -143,28 +150,24 @@ class ProfileActivity : AppCompatActivity() {
         query.addValueEventListener(listener)
     }
 
-    /*private fun getPhotos()
+    private fun getPhotos()
     {
-        var user = FirebaseAuth.getInstance().currentUser?.uid
-        val query = database.child("users").child(id).child("pictures")
-        val options = FirebaseRecyclerOptions.Builder<HashMap<String,String>>()
-            .setQuery(query,HashMap::class.java)
-            .build()
+        database.child("pictures").child(id)
+            .addValueEventListener(object: ValueEventListener{
+                override fun onCancelled(p0: DatabaseError) {
 
-        adapterAlbum = object : FirebaseRecyclerAdapter<HashMap<String,String>,PhotoAlbumViewHolder>(options){
-            override fun onCreateViewHolder(p0: ViewGroup, p1: Int): PhotoAlbumViewHolder {
-                val inflater = LayoutInflater.from(p0.context)
-                return PhotoAlbumViewHolder(inflater.inflate(R.layout.photos_row,p0,false))
-            }
+                }
 
-            override fun onBindViewHolder(holder: PhotoAlbumViewHolder, position: Int, model: HashMap<String,String>) {
-
-            }
-
-        }
-        photoAlbum.adapter = adapterAlbum
-        adapterAlbum?.startListening()
-    }*/
+                override fun onDataChange(p0: DataSnapshot) {
+                    var photos: MutableList<String> = mutableListOf()
+                    for (postSnapshot in p0.children ) {
+                        val album = postSnapshot.getValue(ImageUploadInfo::class.java)
+                        photos.add(album?.imageURL?:"")
+                    }
+                    adapterAlbum.setAlbum(photos)
+                }
+            })
+    }
 
 
     private fun setFriendshipState() {
@@ -299,11 +302,20 @@ class ProfileActivity : AppCompatActivity() {
             .addOnFailureListener {
                 Toast.makeText(this@ProfileActivity, "Profile picture not saved", Toast.LENGTH_SHORT).show()
             }
+        val img = ImageUploadInfo(UUID.randomUUID().toString(),downloadUri)
+        database.child("pictures").child(id).push().setValue(img)
+            .addOnSuccessListener {
+                Toast.makeText(this@ProfileActivity, "Pictured saved", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this@ProfileActivity, "Picture not saved", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun savePhoto(downloadUri: String)
     {
-        database.child("users").child(id).child("pictures").push().setValue(downloadUri)
+        val img = ImageUploadInfo(UUID.randomUUID().toString(),downloadUri)
+        database.child("pictures").child(id).push().setValue(img)
             .addOnSuccessListener {
                 Toast.makeText(this@ProfileActivity, "Pictured saved", Toast.LENGTH_SHORT).show()
             }

@@ -11,7 +11,7 @@ data class User(
     var id:String? = "",
     var name:String? = "",
     var profilePic:String? = "",
-    var pictures:HashMap<String,String>? = hashMapOf(),
+    var pictures:List<String>? = mutableListOf(),
     var education:List<String>? = mutableListOf(),
     var city:String ? = "",
     var birth: String? = "",

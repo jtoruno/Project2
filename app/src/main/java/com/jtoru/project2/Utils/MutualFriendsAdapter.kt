@@ -18,7 +18,6 @@ import com.jtoru.project2.Actitivies.ProfileActivity
 import com.jtoru.project2.Model.User
 import com.jtoru.project2.R
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.friends_row.view.*
 
 class MutualFriendsAdapter(val context: Context): RecyclerView.Adapter<MutualFriendsAdapter.MutualFriendsVH>(){
     private var mDataset: MutableList<String> = mutableListOf()
