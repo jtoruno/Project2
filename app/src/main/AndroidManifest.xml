@@ -9,30 +9,40 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".Actitivies.AddPostActivity">
+        <activity android:name=".Actitivies.AddPostActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Actitivies.MyFriendsActivity">
+        <activity android:name=".Actitivies.MyFriendsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Actitivies.SearchTestActivity">
+        <activity android:name=".Actitivies.SearchTestActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Actitivies.SearchActivity">
+        <activity android:name=".Actitivies.SearchActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Actitivies.RegisterActivity">
+        <activity android:name=".Actitivies.RegisterActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Actitivies.HomeActivity">
+        <activity android:name=".Actitivies.HomeActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".Actitivies.FriendsActivity">
+        <activity android:name=".Actitivies.FriendsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Actitivies.ProfileDetailsActivity">
+        <activity android:name=".Actitivies.ProfileDetailsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Actitivies.ProfileActivity">
+        <activity android:name=".Actitivies.ProfileActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".Actitivies.MainActivity">
+        <activity android:name=".Actitivies.MainActivity"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 

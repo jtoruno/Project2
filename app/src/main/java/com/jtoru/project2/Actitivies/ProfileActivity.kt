@@ -430,7 +430,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val TAKE_PICTURE = 101
+        internal const val TAKE_PICTURE = 101
         private const val ADD_PICTURE = 102
     }
 }

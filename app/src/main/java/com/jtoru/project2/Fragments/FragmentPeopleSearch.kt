@@ -72,6 +72,7 @@ class FragmentPeopleSearch : Fragment() {
             .reference
             .child("users")
             .orderByChild("name")
+
             .startAt(value)
             .endAt(value + "\uf8ff")
         val options =  FirebaseRecyclerOptions.Builder<User>()
