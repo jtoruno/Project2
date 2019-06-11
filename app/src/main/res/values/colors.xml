@@ -5,4 +5,5 @@
     <color name="colorAccent">#000000</color>
     <color name="colorPrimaryLight">#7694e4</color>
     <color name="CustomGray">#90949b</color>
+    <color name="grayFb">#e9ebee</color>
 </resources>
