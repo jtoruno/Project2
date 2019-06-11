@@ -275,7 +275,7 @@ class ProfileActivity : AppCompatActivity() {
                 fileUri = data?.data
                 //val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, fileUri)
                 Picasso.get().load(fileUri).error(R.drawable.download).into(img_profilePic)
-                val ref = mStorageRef.child(id)
+                val ref = mStorageRef.child(id).child(UUID.randomUUID().toString())
                 var uploadTask = ref.putFile(fileUri!!)
 
                 val urlTask = uploadTask.continueWithTask(Continuation<UploadTask.TaskSnapshot, Task<Uri>> { task ->

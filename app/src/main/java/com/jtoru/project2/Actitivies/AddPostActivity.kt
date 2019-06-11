@@ -142,6 +142,8 @@ class AddPostActivity : AppCompatActivity() {
                 var type = "IMAGE"
                 var content = downloadUri
                 val post = Post(idPost,userId,publish,desc,type,content)
+                val img = ImageUploadInfo(UUID.randomUUID().toString(),downloadUri)
+                database.child("pictures").child(userId).push().setValue(img)
                 database.child("posts").child(idPost).setValue(post)
                     .addOnSuccessListener {
                         Toast.makeText(this@AddPostActivity, "Post saved!", Toast.LENGTH_SHORT).show()
