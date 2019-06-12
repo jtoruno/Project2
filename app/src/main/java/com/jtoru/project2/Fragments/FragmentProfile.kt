@@ -2,7 +2,9 @@ package com.jtoru.project2.Fragments
 
 
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -13,7 +15,10 @@ import android.widget.TextView
 
 import com.jtoru.project2.R
 import android.content.Intent
+import android.os.AsyncTask
+import android.support.v4.app.ActivityCompat.finishAffinity
 import android.support.v4.app.DialogFragment
+import android.support.v4.content.ContextCompat.startActivity
 import android.widget.LinearLayout
 import com.firebase.ui.auth.AuthUI
 import com.jtoru.project2.Actitivies.HomeActivity
@@ -25,8 +30,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.jtoru.project2.Actitivies.MainActivity
+import com.jtoru.project2.Model.Friendship
+import com.jtoru.project2.Model.Post
 import com.jtoru.project2.Model.User
 import com.squareup.picasso.Picasso
+import javax.security.auth.callback.Callback
 
 
 class FragmentProfile : Fragment() {
@@ -119,67 +128,96 @@ class FragmentProfile : Fragment() {
     }
 
     private fun deleteAccount(){
-        val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
-        var readyPost = false
-        var readyPictures = false
-        var readyEducation = false
-        var readyStorage = false
-        var readyAuth = false
-        var readyFriends = false
-        while(readyPost && readyPictures && readyEducation && readyStorage && readyAuth && readyFriends) {
-
+        class MyDialogFragment : DialogFragment() {
+            override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+                return android.support.v7.app.AlertDialog.Builder(activity!!)
+                    .setTitle("Delete account")
+                    .setMessage("Do you want to delete your account?")
+                    .setPositiveButton("Yes") { dialog, which ->
+                        dialog.dismiss()
+                        val async = request(activity!!.applicationContext)
+                        async.execute()
+                    }
+                    .setNegativeButton("No",null)
+                    .create()
+            }
         }
-        database.child("posts").child(currentUser).removeValue()
-            .addOnSuccessListener {
-                readyPost = true
-            }
-            .addOnFailureListener {
-            }
-        database.child("pictures").child(currentUser).removeValue()
-            .addOnSuccessListener {
-                readyPictures = true
-            }
-            .addOnFailureListener {
-            }
-        database.child("education").child(currentUser).removeValue()
-            .addOnSuccessListener {
-                readyEducation = true
-            }
-            .addOnFailureListener {
-            }
-        mStorageRef.child(currentUser).delete()
-            .addOnSuccessListener {
-                readyStorage = true
-
-            }
-            .addOnFailureListener {
-            }
-        FirebaseAuth.getInstance().currentUser?.delete()
-            ?.addOnSuccessListener {
-                readyAuth = true
-            }
-            ?.addOnFailureListener {
-            }
+        MyDialogFragment().show(fragmentManager!!,"HALP")
     }
 
-    private fun deleteFriends(){
-        val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
-        val query1 = database.child("friendship")
-        val listener = object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                Log.w("ProfileActivity", p0.toException())
-            }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                for (postSnapshot in p0.children) {
-                    if(postSnapshot.key?.contains(currentUser) == true)
-                    {
-                        database.child(postSnapshot?.key?:"").removeValue()
+
+    class request(val context: Context): AsyncTask<Unit,Unit,Unit>(){
+
+        override fun doInBackground(vararg p0: Unit?) {
+            var database = FirebaseDatabase.getInstance().reference
+            var mStorageRef = FirebaseStorage.getInstance().reference
+            val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
+            try {
+                deleteFriends()
+                deletePosts()
+                database.child("pictures").child(currentUser).removeValue()
+                database.child("education").child(currentUser).removeValue()
+                database.child("users").child(currentUser).removeValue()
+                mStorageRef.child(currentUser).delete()
+                FirebaseAuth.getInstance().currentUser?.delete()
+            }
+            catch(e:Exception)
+            {
+                Log.e("GGGGGGGGGG","Se cayo",e)
+            }
+        }
+
+        override fun onPostExecute(result: Unit?) {
+            super.onPostExecute(result)
+            val i = Intent(context, HomeActivity::class.java)
+            context.startActivity(i)
+        }
+
+        private fun deletePosts(){
+            var database = FirebaseDatabase.getInstance().reference
+            val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
+            val query1 = database.child("posts")
+            val listener = object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    Log.w("ProfileActivity", p0.toException())
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    for (postSnapshot in p0.children) {
+                        val post = postSnapshot.getValue(Post::class.java)
+                        if (post?.idUser == currentUser) {
+                            database.child("posts").child(post?.id ?: "").removeValue()
+
+                        }
                     }
                 }
             }
+            query1.addValueEventListener(listener)
         }
-        query1.addValueEventListener(listener)
-    }
 
+
+        private fun deleteFriends(){
+            var database = FirebaseDatabase.getInstance().reference
+            val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
+            val query1 = database.child("friendship")
+            val listener = object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+                    Log.w("ProfileActivity", p0.toException())
+                }
+
+                override fun onDataChange(p0: DataSnapshot) {
+                    for (postSnapshot in p0.children) {
+                        val friendshit = postSnapshot.getValue(Friendship::class.java)
+                        if(friendshit?.sender == currentUser || friendshit?.receiver == currentUser)
+                        {
+                            database.child(friendshit.id).removeValue()
+                        }
+                    }
+                }
+            }
+            query1.addValueEventListener(listener)
+        }
+
+    }
 }
