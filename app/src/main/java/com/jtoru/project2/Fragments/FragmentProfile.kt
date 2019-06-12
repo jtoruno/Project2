@@ -171,6 +171,7 @@ class FragmentProfile : Fragment() {
         override fun onPostExecute(result: Unit?) {
             super.onPostExecute(result)
             val i = Intent(context, HomeActivity::class.java)
+            i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             context.startActivity(i)
         }
 
@@ -211,7 +212,7 @@ class FragmentProfile : Fragment() {
                         val friendshit = postSnapshot.getValue(Friendship::class.java)
                         if(friendshit?.sender == currentUser || friendshit?.receiver == currentUser)
                         {
-                            database.child(friendshit.id).removeValue()
+                            database.child("friendship").child(friendshit.id).removeValue()
                         }
                     }
                 }
