@@ -23,14 +23,12 @@ import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
-import com.jtoru.project2.Model.EducationUploadInfo
-import com.jtoru.project2.Model.Friendship
-import com.jtoru.project2.Model.ImageUploadInfo
-import com.jtoru.project2.Model.User
+import com.jtoru.project2.Model.*
 import com.jtoru.project2.R
 import com.jtoru.project2.Utils.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.fragment_fragment_timeline.*
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -53,6 +51,9 @@ class ProfileActivity : AppCompatActivity() {
     lateinit var adapterEducation : EducationAdapter
     private lateinit var managerEducation: LinearLayoutManager
     lateinit var education : RecyclerView
+    private var adapterPost : FirebaseRecyclerAdapter<Post,PostVH> ? = null
+    private lateinit var managerPost : LinearLayoutManager
+    lateinit var recyclerPost : RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -83,6 +84,13 @@ class ProfileActivity : AppCompatActivity() {
         photoAlbum.layoutManager = managerPhotos
         adapterAlbum = PhotoAlbumAdapter(this)
         photoAlbum.adapter = adapterAlbum
+
+
+        recyclerPost = findViewById(R.id.recycler_postsProfile)
+        managerPost = LinearLayoutManager(this)
+        managerPost.reverseLayout = true
+        managerPost.stackFromEnd = true
+        recyclerPost.layoutManager = managerPost
 
         btn_editInfoProfile.setOnClickListener {
             val i = Intent(this, ProfileDetailsActivity::class.java)
@@ -202,7 +210,43 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun getPosts(){
+        val user = FirebaseAuth.getInstance().currentUser?.uid
+        val query = database.child("posts")
+        val options = FirebaseRecyclerOptions.Builder<Post>()
+            .setQuery(query, Post::class.java)
+            .build()
 
+        adapterPost = object : FirebaseRecyclerAdapter<Post, PostVH>(options){
+            override fun onCreateViewHolder(p0: ViewGroup, p1: Int): PostVH {
+                val inflater = LayoutInflater.from(p0.context)
+                return PostVH(inflater.inflate(R.layout.post_row,p0,false))
+            }
+
+            override fun onBindViewHolder(holder: PostVH, position: Int, model: Post) {
+                if(model.idUser == id)
+                {
+                    holder.bindToItem(model)
+                    if(model.idUser == user)
+                    {
+                        Log.e("idUser",model.idUser)
+                        Log.e("id",user)
+                        Log.e("idPost",model.id)
+                        holder.itemView.setOnClickListener {
+                            database.child("posts").child(model.id?:"").removeValue()
+                        }
+                    }
+                }
+                else
+                {
+                    holder.itemView.visibility = View.GONE
+                    holder.itemView.layoutParams = RecyclerView.LayoutParams(0, 0)
+                }
+
+            }
+
+        }
+        recyclerPost.adapter = adapterPost
+        adapterPost?.startListening()
     }
 
     private fun setFriendshipState() {
@@ -432,5 +476,15 @@ class ProfileActivity : AppCompatActivity() {
     companion object {
         internal const val TAKE_PICTURE = 101
         private const val ADD_PICTURE = 102
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+
     }
 }

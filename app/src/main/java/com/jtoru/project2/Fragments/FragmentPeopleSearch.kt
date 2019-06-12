@@ -32,9 +32,7 @@ class FragmentPeopleSearch : Fragment() {
     lateinit var mRef: DatabaseReference
     private lateinit var manager: LinearLayoutManager
     private var adapter : FirebaseRecyclerAdapter<User, ItemViewHolder>? = null
-    private lateinit var btnSearch:ImageButton
-    private lateinit var filterText:TextInputEditText
-    private var textQuery = ""
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -72,7 +70,6 @@ class FragmentPeopleSearch : Fragment() {
             .reference
             .child("users")
             .orderByChild("name")
-
             .startAt(value)
             .endAt(value + "\uf8ff")
         val options =  FirebaseRecyclerOptions.Builder<User>()

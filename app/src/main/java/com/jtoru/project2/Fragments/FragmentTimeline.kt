@@ -71,6 +71,15 @@ class FragmentTimeline : Fragment() {
 
             override fun onBindViewHolder(holder: PostVH, position: Int, model: Post) {
                 holder.bindToItem(model)
+                if(model.idUser == user)
+                {
+                    Log.e("idUser",model.idUser)
+                    Log.e("id",user)
+                    Log.e("idPost",model.id)
+                    holder.itemView.setOnClickListener {
+                        database.child("posts").child(model.id?:"").removeValue()
+                    }
+                }
             }
 
         }

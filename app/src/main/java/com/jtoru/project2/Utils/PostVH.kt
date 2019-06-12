@@ -1,6 +1,7 @@
 package com.jtoru.project2.Utils
 
 import android.support.v7.widget.RecyclerView
+import android.text.format.DateUtils.getRelativeTimeSpanString
 import android.util.Log
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
@@ -19,7 +20,7 @@ import kotlinx.android.synthetic.main.post_row.view.*
 class PostVH(itemView : View) : RecyclerView.ViewHolder(itemView) {
     private val database = FirebaseDatabase.getInstance().reference
     fun bindToItem(post: Post){
-        itemView.txt_datePost.text = post.publish.toString()
+        itemView.txt_datePost.text = getRelativeTimeSpanString(post.publish?:0)
         itemView.txt_descPost.text = post.description
         var pp = post.content
         if(pp != null && pp.isNotEmpty()) {
