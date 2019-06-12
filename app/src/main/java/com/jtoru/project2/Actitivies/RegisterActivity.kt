@@ -25,6 +25,8 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         supportActionBar?.title = "Register your account!"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         database = FirebaseDatabase.getInstance().reference
 
@@ -125,6 +127,11 @@ class RegisterActivity : AppCompatActivity() {
     }
     fun twoDigits(n: Int): String {
         return if (n <= 9) "0$n" else n.toString()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
 

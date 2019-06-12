@@ -1,5 +1,7 @@
 package com.jtoru.project2.Utils
 
+import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils.getRelativeTimeSpanString
 import android.util.Log
@@ -9,6 +11,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.jtoru.project2.Actitivies.ImageActivity
 import com.jtoru.project2.Model.Friendship
 import com.jtoru.project2.Model.Post
 import com.jtoru.project2.Model.User
@@ -32,6 +35,9 @@ class PostVH(itemView : View) : RecyclerView.ViewHolder(itemView) {
             itemView.imageView5.visibility = View.GONE
         }
         getUser(post.idUser?:"")
+        itemView.imageView5.setOnClickListener {
+            imageIntent(itemView.context,post.content?:"")
+        }
     }
     private fun getUser(id:String) {
         val query = database.child("users").child(id)
@@ -52,5 +58,11 @@ class PostVH(itemView : View) : RecyclerView.ViewHolder(itemView) {
             }
         }
         query.addValueEventListener(listener)
+    }
+
+    private fun imageIntent(context : Context, url : String){
+        val intent = Intent(context, ImageActivity::class.java)
+        intent.putExtra("url",url)
+        context.startActivity(intent)
     }
 }

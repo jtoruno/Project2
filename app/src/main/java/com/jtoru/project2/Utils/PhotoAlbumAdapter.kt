@@ -1,12 +1,14 @@
 package com.jtoru.project2.Utils
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.jtoru.project2.Actitivies.ImageActivity
 import com.jtoru.project2.R
 import com.squareup.picasso.Picasso
 
@@ -26,7 +28,7 @@ class PhotoAlbumAdapter(context: Context) : RecyclerView.Adapter<PhotoAlbumAdapt
         val uri = mDataset[p1]
         Picasso.get().load(uri).error(R.drawable.download).into(p0.image)
         p0.itemView.setOnClickListener {
-
+            imageIntent(p0.itemView.context,uri)
         }
     }
 
@@ -42,5 +44,11 @@ class PhotoAlbumAdapter(context: Context) : RecyclerView.Adapter<PhotoAlbumAdapt
     fun setAlbum(album:MutableList<String>){
         mDataset = album
         notifyDataSetChanged()
+    }
+
+    private fun imageIntent(context : Context, url : String){
+        val intent = Intent(context, ImageActivity::class.java)
+        intent.putExtra("url",url)
+        context.startActivity(intent)
     }
 }

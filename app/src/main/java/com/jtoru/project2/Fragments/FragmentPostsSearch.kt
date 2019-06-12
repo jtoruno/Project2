@@ -39,6 +39,7 @@ class FragmentPostsSearch : Fragment() {
         database = FirebaseDatabase.getInstance()
         mRef = database.reference
         searchView = activity!!.findViewById(R.id.searchView)
+        /*
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 queryInfo(p0?:"")
@@ -49,7 +50,7 @@ class FragmentPostsSearch : Fragment() {
                 return true
             }
 
-        })
+        })*/
         return view
     }
 
