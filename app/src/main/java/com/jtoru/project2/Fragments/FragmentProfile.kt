@@ -20,20 +20,23 @@ import com.jtoru.project2.Actitivies.HomeActivity
 import com.jtoru.project2.Actitivies.ProfileActivity
 import android.support.v4.view.ViewPager
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.jtoru.project2.Model.User
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_profile.*
 
 
 class FragmentProfile : Fragment() {
     private lateinit var database: DatabaseReference
+    private lateinit var mStorageRef: StorageReference
     private lateinit var profilePic:ImageView
     private lateinit var profileName: TextView
     private lateinit var goToProfile:TextView
     private lateinit var goToFriends:LinearLayout
-    private lateinit var goToSettings:LinearLayout
+    private lateinit var goToDelete:LinearLayout
     private lateinit var signOut:LinearLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,10 +45,11 @@ class FragmentProfile : Fragment() {
         profileName = view.findViewById(R.id.txt_nameProfileFragment)
         goToProfile = view.findViewById(R.id.txt_goProfileFragment)
         goToFriends = view.findViewById(R.id.lay_goToFriendsProfile)
-        goToSettings = view.findViewById(R.id.lay_goToSettingsProfile)
+        goToDelete = view.findViewById(R.id.lay_goToSettingsProfile)
         signOut = view.findViewById(R.id.lay_signOutProfile)
 
         database = FirebaseDatabase.getInstance().reference
+        mStorageRef = FirebaseStorage.getInstance().reference
 
         goToProfile.setOnClickListener {
             val currentUser = FirebaseAuth.getInstance().currentUser
@@ -58,6 +62,10 @@ class FragmentProfile : Fragment() {
         goToFriends.setOnClickListener {
             val vp = activity!!.findViewById(com.jtoru.project2.R.id.viewpager) as ViewPager
             vp.currentItem = 1
+        }
+
+        goToDelete.setOnClickListener {
+            deleteAccount()
         }
 
         signOut.setOnClickListener {
@@ -108,6 +116,37 @@ class FragmentProfile : Fragment() {
             }
         }
         query.addValueEventListener(listener)
+    }
+
+    private fun deleteAccount(){
+        val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
+        database.child("posts").child(currentUser).removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(activity!!, "", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+
+            }
+        database.child("pictures").child(currentUser).removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(activity!!, "", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+
+            }
+        database.child("education").child(currentUser).removeValue()
+            .addOnSuccessListener {
+            }
+            .addOnFailureListener {
+            }
+        mStorageRef.child(currentUser).delete()
+            .addOnSuccessListener {
+
+            }
+            .addOnFailureListener {
+
+            }
+
     }
 
 

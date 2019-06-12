@@ -9,7 +9,7 @@
             android:layout_height="match_parent">
 
         <ImageView
-                android:src="@mipmap/ic_launcher_round"
+                android:src="@drawable/download"
                 android:layout_width="77dp"
                 android:layout_height="77dp"
                 android:id="@+id/img_profileFragment" app:layout_constraintStart_toStartOf="parent"
@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.2" android:id="@+id/imageView2"/>
                 <TextView
-                        android:text="Settings"
+                        android:text="Delete account"
                         android:layout_width="0dp"
                         android:layout_weight="0.8"
                         android:layout_gravity="center_vertical"
