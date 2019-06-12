@@ -41,6 +41,7 @@ class FragmentTimeline : Fragment() {
         database = FirebaseDatabase.getInstance().reference
 
         recycler = view.findViewById(R.id.recycler_timeline)
+        //recycler.setHasFixedSize(true)
         manager = LinearLayoutManager(activity!!)
         manager.reverseLayout = true
         manager.stackFromEnd = true
@@ -58,7 +59,7 @@ class FragmentTimeline : Fragment() {
 
     private fun query(){
         var user = FirebaseAuth.getInstance().currentUser?.uid
-        val query = database.child("posts")
+        val query = database.child("posts").orderByChild("publish")
         val options = FirebaseRecyclerOptions.Builder<Post>()
             .setQuery(query, Post::class.java)
             .build()
