@@ -2,13 +2,6 @@ package com.jtoru.project2.Model
 
 import com.google.firebase.database.IgnoreExtraProperties
 
-
-enum class PostType {
-    VIDEO,
-    IMAGE,
-    TEXT
-}
-
 @IgnoreExtraProperties
 data class Post(
     var id:String? = "",

@@ -1,6 +1,7 @@
 package com.jtoru.project2.Utils
 
 import android.support.v7.widget.RecyclerView
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.View
 import com.google.firebase.database.DataSnapshot
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.notification_row.view.*
 class NotificationViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
     private val database = FirebaseDatabase.getInstance().reference
     fun bindToItem(user: Friendship){
+        itemView.txt_dateNotif.text = DateUtils.getRelativeTimeSpanString(user.startTime?:0)
         itemView.btn_acceptNotification.setOnClickListener {
             acceptFriend(user.sender?:"",user.receiver?:"")
         }

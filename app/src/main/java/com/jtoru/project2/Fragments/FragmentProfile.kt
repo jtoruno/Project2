@@ -120,34 +120,66 @@ class FragmentProfile : Fragment() {
 
     private fun deleteAccount(){
         val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
+        var readyPost = false
+        var readyPictures = false
+        var readyEducation = false
+        var readyStorage = false
+        var readyAuth = false
+        var readyFriends = false
+        while(readyPost && readyPictures && readyEducation && readyStorage && readyAuth && readyFriends) {
+
+        }
         database.child("posts").child(currentUser).removeValue()
             .addOnSuccessListener {
-                Toast.makeText(activity!!, "", Toast.LENGTH_SHORT).show()
+                readyPost = true
             }
             .addOnFailureListener {
-
             }
         database.child("pictures").child(currentUser).removeValue()
             .addOnSuccessListener {
-                Toast.makeText(activity!!, "", Toast.LENGTH_SHORT).show()
+                readyPictures = true
             }
             .addOnFailureListener {
-
             }
         database.child("education").child(currentUser).removeValue()
             .addOnSuccessListener {
+                readyEducation = true
             }
             .addOnFailureListener {
             }
         mStorageRef.child(currentUser).delete()
             .addOnSuccessListener {
+                readyStorage = true
 
             }
             .addOnFailureListener {
-
             }
-
+        FirebaseAuth.getInstance().currentUser?.delete()
+            ?.addOnSuccessListener {
+                readyAuth = true
+            }
+            ?.addOnFailureListener {
+            }
     }
 
+    private fun deleteFriends(){
+        val currentUser = FirebaseAuth.getInstance().currentUser?.uid?:""
+        val query1 = database.child("friendship")
+        val listener = object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Log.w("ProfileActivity", p0.toException())
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                for (postSnapshot in p0.children) {
+                    if(postSnapshot.key?.contains(currentUser) == true)
+                    {
+                        database.child(postSnapshot?.key?:"").removeValue()
+                    }
+                }
+            }
+        }
+        query1.addValueEventListener(listener)
+    }
 
 }

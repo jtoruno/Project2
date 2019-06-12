@@ -228,9 +228,6 @@ class ProfileActivity : AppCompatActivity() {
                     holder.bindToItem(model)
                     if(model.idUser == user)
                     {
-                        Log.e("idUser",model.idUser)
-                        Log.e("id",user)
-                        Log.e("idPost",model.id)
                         holder.itemView.setOnClickListener {
                             database.child("posts").child(model.id?:"").removeValue()
                         }
@@ -410,7 +407,8 @@ class ProfileActivity : AppCompatActivity() {
         //La llave de friendship es la suma del id del usuario que envia & el usuario que recibe
         var user1 = FirebaseAuth.getInstance().currentUser?.uid
         var user2 = id
-        var friendship = Friendship(user1,user2)
+        var time = Date().time
+        var friendship = Friendship(user1,user2,time)
         database.child("friendship").child("$user1&$user2").setValue(friendship)
             .addOnSuccessListener {
                 Toast.makeText(this@ProfileActivity, "Friend request send!", Toast.LENGTH_SHORT).show()
